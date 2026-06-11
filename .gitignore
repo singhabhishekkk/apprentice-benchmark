@@ -1,0 +1,6 @@
+__pycache__/
+.venv/
+golden.csv
+optimized_program.json
+*.log
+.env
