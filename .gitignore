@@ -4,3 +4,4 @@ golden.csv
 optimized_program.json
 *.log
 .env
+.codegraph/
