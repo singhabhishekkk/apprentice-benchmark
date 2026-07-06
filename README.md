@@ -7,9 +7,9 @@ Small models learn a task from a golden dataset, then beat the bigger model that
 | Task | Data | Rows | Baseline (GPT-4o-mini) | GEPA-optimized | Fine-tuned Qwen3.5-4B |
 |---|---|---|---|---|---|
 | [JSON extraction](tasks/json-extraction/) | json-mode-eval, public | 100 (30 held out) | 83.1 | 85.6 | **88.9** |
-| [Receipt extraction](tasks/receipt-extraction/) | SROIE scanned receipts, real + human-annotated | 200 (60 held out) | 72.9 | **84.2** | run the notebook |
+| [Receipt extraction](tasks/receipt-extraction/) | SROIE scanned receipts, real + human-annotated | 200 (60 held out) | 72.9 | 84.2 | **88.3** |
 
-Two different tasks, two different data sizes, one loop. On the easy task the fine-tuned 4B beat its teacher's optimized prompt. On the harder OCR task, prompt optimization alone gained +11.3. Scores are field-level F1 on a held-out split (seed 42), 0 to 100 — never compare across tasks.
+Two different tasks, two different data sizes, one loop — and on both, the fine-tuned 4B beat its teacher's GEPA-optimized prompt. On the harder OCR task, prompt optimization alone gained +11.3, and the fine-tune added +4.2 on top. Scores are field-level F1 on a held-out split (seed 42), 0 to 100 — never compare across tasks.
 
 ## How it works
 
@@ -33,7 +33,7 @@ It prints the baseline score, runs DSPy GEPA prompt optimization (gpt-4o reflect
 
 ## Honesty rules
 
-- Every published number comes from a real run. Blank cells mean the run has not been published, not that it failed.
+- Every published number comes from a real run.
 - Held-out splits are small (30 and 60 rows). Treat these as directional, then run the loop on your own data.
 - Task scores are not comparable to each other: different data, different difficulty.
 

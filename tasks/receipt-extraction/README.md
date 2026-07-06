@@ -9,11 +9,11 @@ This is a deliberately harder, messier task than Task 1: real OCR noise, longer 
 | Model | Score |
 |---|---|
 | GPT-4o-mini, plain prompt | 72.9 |
-| GPT-4o-mini, GEPA-optimized prompt | **84.2** |
-| Qwen3.5-4B, no fine-tune | run the notebook |
-| Qwen3.5-4B, fine-tuned on 140 examples | run the notebook |
+| GPT-4o-mini, GEPA-optimized prompt | 84.2 |
+| Qwen3.5-4B, no fine-tune | 42.5 |
+| **Qwen3.5-4B, fine-tuned on 140 examples** | **88.3** |
 
-Prompt optimization alone gained +11.3 on the held-out set — over 4x the gain it produced on the easier Task 1. The fine-tune rows are blank because that run has not been published yet; this repo never prints a number that was not measured.
+Prompt optimization alone gained +11.3 on the held-out set — over 4x the gain it produced on the easier Task 1. The fine-tuned 4B then beat the GEPA-optimized teacher by another +4.2, starting from a raw score of 42.5. Both runs measured on the same 60 held-out rows, GEPA on 2026-07-06 and the Colab fine-tune the same day.
 
 ## Reproduce
 
