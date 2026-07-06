@@ -10,10 +10,14 @@ This is a deliberately harder, messier task than Task 1: real OCR noise, longer 
 |---|---|
 | GPT-4o-mini, plain prompt | 72.9 |
 | GPT-4o-mini, GEPA-optimized prompt | 84.2 |
+| GPT-5.4-mini, plain prompt | 72.9 |
+| GPT-5.4-mini, GEPA-optimized prompt | 79.6 |
 | Qwen3.5-4B, no fine-tune | 42.5 |
-| **Qwen3.5-4B, fine-tuned on 140 examples** | **88.3** |
+| **Qwen3.5-4B, fine-tuned on 140 examples** | **89.2** |
 
-Prompt optimization alone gained +11.3 on the held-out set — over 4x the gain it produced on the easier Task 1. The fine-tuned 4B then beat the GEPA-optimized teacher by another +4.2, starting from a raw score of 42.5. Both runs measured on the same 60 held-out rows, GEPA on 2026-07-06 and the Colab fine-tune the same day.
+Prompt optimization on GPT-4o-mini gained +11.3 on the held-out set — over 4x the gain it produced on the easier Task 1. The fine-tuned 4B beat both GEPA-optimized teachers: +5.0 over GPT-4o-mini (84.2) and +9.6 over the newer GPT-5.4-mini (79.6), starting from a raw score of 42.5. All runs measured on the same 60 held-out rows, GEPA runs on 2026-07-06 and the Colab fine-tune the same day. Exact fine-tune score: 89.17.
+
+The GPT-5.4-mini rows are a control run: same pipeline, same data, same seed, only the student model swapped (baseline coincidentally matches GPT-4o-mini's 72.92 to the second decimal; the per-row logs differ, see `spike2_run_gpt54mini.log` artifacts in the source project). The fine-tuned adapter is published: [singhabhishekkk/apprentice-qwen35-4b-lora-receipts](https://huggingface.co/singhabhishekkk/apprentice-qwen35-4b-lora-receipts).
 
 ## Reproduce
 
