@@ -49,6 +49,6 @@ New tasks follow the same contract, so results stay comparable in method even wh
 
 ## What this is
 
-The seed experiments behind [Apprentice](https://github.com/singh-abhishekk/Apprentice): small models learn your task from your golden dataset, then replace the expensive model — eval-gated, with instant rollback.
+The seed experiments behind [Apprentice](https://github.com/singhabhishekkk/Apprentice): small models learn your task from your golden dataset, then replace the expensive model — eval-gated, with instant rollback.
 
 Apache-2.0.
