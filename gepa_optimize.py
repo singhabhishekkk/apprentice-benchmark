@@ -90,9 +90,37 @@ def main() -> None:
     parser.add_argument("--model", default="openai/gpt-4o-mini", help="student LM")
     parser.add_argument("--reflection-model", default="openai/gpt-4o", help="GEPA reflection LM")
     parser.add_argument("--seed", type=int, default=42)
+    parser.add_argument(
+        "--api-base",
+        default=None,
+        help="override API base for --model/--reflection-model (e.g. an OpenAI-compatible gateway)",
+    )
+    parser.add_argument(
+        "--api-key",
+        default=None,
+        help="API key for --api-base (defaults to whatever the LM provider reads from its own env var)",
+    )
+    parser.add_argument(
+        "--num-threads",
+        type=int,
+        default=4,
+        help="Evaluate() parallelism. Lower reduces burst load on rate-limited gateways (default 4).",
+    )
+    parser.add_argument(
+        "--max-errors",
+        type=int,
+        default=30,
+        help="Evaluate() error budget before the whole run is cancelled (default 30, well above dspy's default of a few).",
+    )
     args = parser.parse_args()
 
-    dspy.configure(lm=dspy.LM(args.model))
+    lm_kwargs: dict[str, str] = {}
+    if args.api_base:
+        lm_kwargs["api_base"] = args.api_base
+    if args.api_key:
+        lm_kwargs["api_key"] = args.api_key
+
+    dspy.configure(lm=dspy.LM(args.model, **lm_kwargs))
 
     examples = load_dataset(args.data, args.input_col, args.output_col)
     random.Random(args.seed).shuffle(examples)
@@ -101,7 +129,13 @@ def main() -> None:
     print(f"dataset: {len(examples)} rows -> train {len(trainset)}, held-out {len(devset)}")
 
     program = dspy.Predict(Extract)
-    evaluate = dspy.Evaluate(devset=devset, metric=json_field_metric, display_progress=True)
+    evaluate = dspy.Evaluate(
+        devset=devset,
+        metric=json_field_metric,
+        display_progress=True,
+        num_threads=args.num_threads,
+        max_errors=args.max_errors,
+    )
 
     baseline_score = evaluate(program)
     print(f"\nbaseline score: {baseline_score}")
@@ -109,7 +143,7 @@ def main() -> None:
     optimizer = dspy.GEPA(
         metric=json_field_metric,
         auto="light",
-        reflection_lm=dspy.LM(args.reflection_model),
+        reflection_lm=dspy.LM(args.reflection_model, **lm_kwargs),
     )
     optimized = optimizer.compile(program, trainset=trainset)
 
