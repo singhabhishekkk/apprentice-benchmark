@@ -75,11 +75,31 @@ def json_field_metric(
     return dspy.Prediction(score=f1, feedback=feedback)
 
 
+def exact_match_metric(
+    example: dspy.Example, prediction, trace=None, pred_name=None, pred_trace=None
+):
+    expected = str(example.expected).strip().casefold()
+    actual = str(getattr(prediction, "extracted", "")).strip().casefold()
+    if actual == expected:
+        return dspy.Prediction(score=1.0, feedback="exact match")
+    return dspy.Prediction(
+        score=0.0,
+        feedback=f"expected exactly {example.expected!r}; got {getattr(prediction, 'extracted', '')!r}",
+    )
+
+
 class Extract(dspy.Signature):
     """Extract the structured fields from the text as a JSON object."""
 
     text: str = dspy.InputField()
     extracted: str = dspy.OutputField(desc="valid JSON object with the extracted fields")
+
+
+class ExtractExact(dspy.Signature):
+    """Return the exact answer text."""
+
+    text: str = dspy.InputField()
+    extracted: str = dspy.OutputField(desc="answer text only")
 
 
 def main() -> None:
@@ -89,6 +109,7 @@ def main() -> None:
     parser.add_argument("--output-col", default="output")
     parser.add_argument("--model", default="openai/gpt-4o-mini", help="student LM")
     parser.add_argument("--reflection-model", default="openai/gpt-4o", help="GEPA reflection LM")
+    parser.add_argument("--metric", choices=["json", "exact"], default="json")
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument(
         "--api-base",
@@ -128,10 +149,11 @@ def main() -> None:
     trainset, devset = examples[:split], examples[split:]
     print(f"dataset: {len(examples)} rows -> train {len(trainset)}, held-out {len(devset)}")
 
-    program = dspy.Predict(Extract)
+    metric = exact_match_metric if args.metric == "exact" else json_field_metric
+    program = dspy.Predict(ExtractExact if args.metric == "exact" else Extract)
     evaluate = dspy.Evaluate(
         devset=devset,
-        metric=json_field_metric,
+        metric=metric,
         display_progress=True,
         num_threads=args.num_threads,
         max_errors=args.max_errors,
@@ -141,7 +163,7 @@ def main() -> None:
     print(f"\nbaseline score: {baseline_score}")
 
     optimizer = dspy.GEPA(
-        metric=json_field_metric,
+        metric=metric,
         auto="light",
         reflection_lm=dspy.LM(args.reflection_model, **lm_kwargs),
     )
