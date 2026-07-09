@@ -48,7 +48,7 @@ python ../../gepa_optimize.py --data golden.csv \
   --model openai/gpt-5.4-mini --reflection-model openai/gpt-5.4-mini
 ```
 
-**Two fine-tunes (free, GPU Colab):** open `colab_finetune_qwen.ipynb` (Qwen3.5-4B) or `colab_finetune_gemma.ipynb` (Gemma 4 E4B) in [Google Colab](https://colab.research.google.com), set runtime to GPU, run all cells. Same 200 rows, same seed, same split, exact-match metric.
+**Two fine-tunes (free, GPU Colab):** open `colab_finetune_both.ipynb` in [Google Colab](https://colab.research.google.com) to run Qwen3.5-4B and Gemma 4 E4B in one session (GPU memory freed between models), or `colab_finetune_qwen.ipynb` / `colab_finetune_gemma.ipynb` individually. Set runtime to GPU, run all cells. Same 200 rows, same seed, same split, exact-match metric.
 
 ## Dataset selection
 
