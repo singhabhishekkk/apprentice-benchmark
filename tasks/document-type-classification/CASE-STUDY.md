@@ -14,8 +14,8 @@ This task uses OCR text from a corrected Tobacco3482 variant on Hugging Face. Th
 |---|---|
 | gpt-5.4-mini with shipped paperless-gpt prompt | 78.33 |
 | gpt-5.4-mini with GEPA-optimized prompt | 81.67 |
-| Qwen3.5-4B, raw | *pending* |
-| Qwen3.5-4B, fine-tuned on 140 examples | *pending* |
+| Qwen3.5-4B, raw | 71.67 |
+| Qwen3.5-4B, fine-tuned on 140 examples | **80.00** |
 | Gemma 4 E4B, raw | *pending* |
 | Gemma 4 E4B, fine-tuned on 140 examples | *pending* |
 
