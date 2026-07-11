@@ -31,6 +31,8 @@ OPENAI_API_KEY=... uv run python tasks/text-to-sql/eval_bird.py \
 uv run pytest tasks/text-to-sql/test_eval_bird.py -q
 ```
 
+Phase-1 fine-tune: open `colab_finetune_qwen3_sql.ipynb` in Google Colab (GPU runtime) and run top to bottom. It clones this repo, builds the training subset, scores the raw Qwen3.5-4B baseline on BIRD dev, trains LoRA, rescores, and prints the gate comparison. Set `QUICK_N = 200` for a smoke pass; smoke scores are never publishable.
+
 `preds.jsonl` and generated predictions use one JSON object per line: `{"question_id": ..., "sql": ...}`. Re-score generated SQL with `--predictions predictions.jsonl`.
 
 ## Honesty and contamination
