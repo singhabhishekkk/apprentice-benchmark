@@ -13,7 +13,9 @@ This task is a case study for [icereed/paperless-gpt](https://github.com/icereed
 | Qwen3.5-4B, no fine-tune | 71.67 |
 | Qwen3.5-4B, fine-tuned on 140 examples | **80.00** ([adapter](https://huggingface.co/singhabhishekkk/apprentice-qwen35-4b-lora-document-types)) |
 | Gemma 4 E4B, no fine-tune | 63.33 |
-| Gemma 4 E4B, fine-tuned on 140 examples | **86.67** ([adapter](https://huggingface.co/singhabhishekkk/apprentice-gemma4-e4b-lora-document-types)) |
+| Gemma 4 E4B, fine-tuned on 140 examples | **86.67** ([adapter + GGUF](https://huggingface.co/singhabhishekkk/apprentice-gemma4-e4b-lora-document-types)) |
+
+The fine-tuned Gemma also ships as a q4_k_m GGUF in the same repo, verified working in Ollama (2026-07-12, `colab_gguf_export.ipynb` printed a valid class name): `ollama run hf.co/singhabhishekkk/apprentice-gemma4-e4b-lora-document-types`
 
 All rows measured on the same 60 held-out rows, same seed, same split (exact match, 0 to 100). gpt-5.4-mini and Qwen runs 2026-07-10; Gemma run 2026-07-12 (Colab notebook in this folder). The fine-tuned Qwen beats the frontier model as paperless-gpt ships it (78.33) and lands 1.67 short of the GEPA-optimized teacher. The fine-tuned Gemma 4 E4B beats both: +8.34 over the shipped prompt and +5.00 over the GEPA-optimized teacher, from a raw score of 63.33. No pending number is published until the corresponding command or notebook prints it.
 
