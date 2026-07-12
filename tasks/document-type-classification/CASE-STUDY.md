@@ -16,10 +16,10 @@ This task uses OCR text from a corrected Tobacco3482 variant on Hugging Face. Th
 | gpt-5.4-mini with GEPA-optimized prompt | 81.67 |
 | Qwen3.5-4B, raw | 71.67 |
 | Qwen3.5-4B, fine-tuned on 140 examples | **80.00** |
-| Gemma 4 E4B, raw | *pending* |
-| Gemma 4 E4B, fine-tuned on 140 examples | *pending* |
+| Gemma 4 E4B, raw | 63.33 |
+| Gemma 4 E4B, fine-tuned on 140 examples | **86.67** |
 
-No score goes here until a real run prints it.
+No score goes here until a real run prints it. The fine-tuned Gemma 4 E4B is the strongest system measured on this task: +8.34 over the prompt paperless-gpt ships and +5.00 over the GEPA-optimized frontier prompt, from 140 verified training examples. Adapter: [apprentice-gemma4-e4b-lora-document-types](https://huggingface.co/singhabhishekkk/apprentice-gemma4-e4b-lora-document-types).
 
 ## Projected cost per 1,000 documents
 
