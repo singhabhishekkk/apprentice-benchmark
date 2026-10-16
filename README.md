@@ -35,7 +35,44 @@ export OPENAI_API_KEY=sk-...
 python ../../gepa_optimize.py --data golden.csv
 ```
 
+`gepa_optimize.py` scores with `checks.py`, the same code as the notebooks and `eval_run.py`.
+
 It prints the baseline score, runs DSPy GEPA prompt optimization (gpt-4o reflection), prints the optimized score, and saves `optimized_program.json`.
+
+## Receipts: check any number yourself
+
+Two scripts, one scoring file. `checks.py` holds the output parsing (strips `<think>` blocks and code fences, takes the first JSON object or first line) and the metrics (field-level F1 for JSON tasks, case-insensitive exact match for classification). `eval_run.py`, `verify.py`, `gepa_optimize.py` and every Colab notebook import it, so one raw output gets one score everywhere.
+
+**Run a model on a task's held-out rows** (any OpenAI-compatible API; temperature 0, seed 42):
+
+```bash
+cd tasks/receipt-extraction && python prepare_data.py && cd ../..
+export OPENAI_API_KEY=sk-...
+python eval_run.py --task receipt-extraction --model gpt-4o-mini
+# LiteLLM, or a local server such as `mlx_lm.server --model <path> --port 8080`:
+python eval_run.py --task receipt-extraction --model <name> --base-url http://localhost:8080/v1 \
+    --price-in 0.05 --price-out 0.05 --reference results/receipt-extraction/gpt-4o-mini/summary.json
+```
+
+It writes `results/<task>/<model>/answers.jsonl` (row_id, gold answer, raw output, parsed output, per-field score, tokens in/out, latency) and `summary.json` (mean score, tokens, cost). Some reasoning models reject `temperature=0`; pass `--omit-temperature` and the summary records it.
+
+**Cost.** `pricing.json` holds dated provider list prices (USD per 1M standard text tokens) with source URLs. `eval_run.py` warns when they are over 30 days old, so re-check the sources before quoting a cost. With `--reference`, the summary adds `vs_reference`: `match_pct` is the model's score as a percent of the reference model's score, `cost_pct` is its cost as a percent of the reference's cost, on the same rows. A small model that is not in `pricing.json` has no list price. The cost you see for it is whatever you pass in `--price-in/--price-out`, and `summary.json` labels it as an assumption. Treat that figure as your own hosting assumption (GPU hours, amortized hardware, or a hosted rate), not a measurement. Latency is recorded per row on whatever hardware ran it; do not compare it across machines.
+
+**Re-score a committed run with no API key:**
+
+```bash
+python verify.py results/receipt-extraction/gpt-4o-mini   # one run
+python verify.py results                                   # every committed run
+```
+
+`verify.py` recomputes each score from the stored gold answer and raw output using `checks.py` and exits non-zero if any score or the summary mean differs from what was committed. It proves the arithmetic. It cannot prove the raw outputs came from the named model; for that, rerun `eval_run.py` with your own key.
+
+**What this does and does not show.**
+
+- We built this pipeline and had the task data while tuning prompts and fine-tunes. The held-out split was not touched for training, but the choices around it (prompts, metrics, parsers) were ours.
+- Held-out sets are small: 30 rows for JSON extraction, 60 for the other tasks. One row moves a score by 1.7 to 3.3 points. Treat gaps of a few points as noise.
+- The metrics are strict exact-string matches per field. A correct answer in different wording scores zero.
+- Scores from earlier runs in the tables above came from the notebook and GEPA parsers as they were then. Those parsers differed (notebooks stripped reasoning and fences, GEPA parsed raw output). They now share `checks.py`, so rerun before comparing old and new numbers.
 
 ## Adding a use case
 
