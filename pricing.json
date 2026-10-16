@@ -1,0 +1,13 @@
+{
+  "unit": "USD per 1M tokens, standard (non-cached, non-batch) text tokens",
+  "checked_on": "2026-10-16",
+  "sources": [
+    "https://developers.openai.com/api/docs/pricing",
+    "https://developers.openai.com/api/docs/models/gpt-4o-mini"
+  ],
+  "models": {
+    "gpt-4o-mini": {"input": 0.15, "output": 0.60},
+    "gpt-4o": {"input": 2.50, "output": 10.00},
+    "gpt-5.4-mini": {"input": 0.75, "output": 4.50}
+  }
+}
