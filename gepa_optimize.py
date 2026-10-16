@@ -18,6 +18,8 @@ import random
 
 import dspy
 
+import checks
+
 
 def load_dataset(path: str, input_col: str, output_col: str) -> list[dspy.Example]:
     import csv
@@ -31,61 +33,20 @@ def load_dataset(path: str, input_col: str, output_col: str) -> list[dspy.Exampl
     return examples
 
 
-def json_field_metric(
-    example: dspy.Example, prediction, trace=None, pred_name=None, pred_trace=None
-):
-    """Tier-1 deterministic metric for JSON extraction: schema-valid + field-level F1.
+def _metric(kind: str):
+    def metric(example: dspy.Example, prediction, trace=None, pred_name=None, pred_trace=None):
+        """GEPA-compatible: 5-arg signature, returns score + text feedback for reflection.
 
-    GEPA-compatible: accepts the 5-arg signature and returns score + text feedback
-    (feedback is Actionable Side Information GEPA's reflection uses to evolve prompts).
-    """
-    try:
-        expected = json.loads(example.expected)
-    except json.JSONDecodeError:
-        return dspy.Prediction(
-            score=0.0, feedback="gold output is not valid JSON; row should be cleaned"
-        )
-    try:
-        actual = json.loads(prediction.extracted)
-    except (json.JSONDecodeError, AttributeError):
-        return dspy.Prediction(
-            score=0.0, feedback="output is not valid JSON; emit a single JSON object only"
-        )
-    if not isinstance(expected, dict) or not isinstance(actual, dict):
-        return dspy.Prediction(
-            score=0.0, feedback="output must be a JSON object, not a list or scalar"
-        )
+        Parsing and scoring live in checks.py, shared with eval_run.py, verify.py and the notebooks.
+        """
+        result = checks.score_output(str(example.expected), str(getattr(prediction, "extracted", "")), kind)
+        return dspy.Prediction(score=result["score"], feedback=result["feedback"])
 
-    true_positives = sum(1 for k, v in expected.items() if actual.get(k) == v)
-    precision = true_positives / len(actual) if actual else 0.0
-    recall = true_positives / len(expected) if expected else 0.0
-    f1 = 2 * precision * recall / (precision + recall) if precision + recall else 0.0
-
-    missing = [k for k in expected if k not in actual]
-    wrong = [k for k in expected if k in actual and actual[k] != expected[k]]
-    extra = [k for k in actual if k not in expected]
-    parts = []
-    if missing:
-        parts.append(f"missing fields: {missing}")
-    if wrong:
-        parts.append(f"wrong values for: {wrong}")
-    if extra:
-        parts.append(f"unexpected extra fields: {extra}")
-    feedback = "; ".join(parts) if parts else "all fields correct"
-    return dspy.Prediction(score=f1, feedback=feedback)
+    return metric
 
 
-def exact_match_metric(
-    example: dspy.Example, prediction, trace=None, pred_name=None, pred_trace=None
-):
-    expected = str(example.expected).strip().casefold()
-    actual = str(getattr(prediction, "extracted", "")).strip().casefold()
-    if actual == expected:
-        return dspy.Prediction(score=1.0, feedback="exact match")
-    return dspy.Prediction(
-        score=0.0,
-        feedback=f"expected exactly {example.expected!r}; got {getattr(prediction, 'extracted', '')!r}",
-    )
+json_field_metric = _metric("json")
+exact_match_metric = _metric("label")
 
 
 class Extract(dspy.Signature):
