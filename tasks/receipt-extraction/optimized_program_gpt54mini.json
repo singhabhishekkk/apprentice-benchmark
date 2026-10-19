@@ -1,0 +1,26 @@
+{
+  "traces": [],
+  "train": [],
+  "demos": [],
+  "signature": {
+    "instructions": "Your task is to extract specific structured fields from a receipt OCR text and output them as a JSON object. The required keys for the JSON object are \"company\", \"address\", \"date\", and \"total\". \n\n1. **Company**: Identify the name of the company. This is typically the prominent text at the beginning of the receipt. Avoid including unnecessary details like registration numbers; only extract the main company name.\n\n2. **Address**: Extract the business address. It may be provided in multiple lines, often following the business name and preceding any contact details such as a phone number or email. The address should be extracted accurately, ensuring no extraneous information or formatting issues (such as misplaced GST IDs or other business registration details).\n\n3. **Date**: Find and extract the transaction date. This is usually clearly stated with a specific format such as DD-MM-YYYY or DD/MM/YYYY, and can often be found near transaction details like invoice number or cashier info.\n\n4. **Total**: Identify the total amount payable, including GST if applicable. This is usually labeled clearly as \"TOTAL SALES INCLUSIVE GST\", \"TOTAL PAYABLE AMOUNT\", or something similar. Ensure this does not just include subtotal amounts or split payments.\n\nUse contextual clues such as section headings and standard receipt layouts to accurately extract these fields. Double-check for possible confusions in sections with similar or misleading information. Pay special attention to formatting details that may indicate line ends or separate sections.\n\nStructure the final JSON object by pairing each field with its correct label, ensuring the extracted data is presented in the specified structure. Example:\n\n```json\n{\n  \"company\": \"Example Store\",\n  \"address\": \"123 Sample Street, Example Town, 12345\",\n  \"date\": \"01/01/2023\",\n  \"total\": \"123.45\"\n}\n```",
+    "fields": [
+      {
+        "prefix": "Text:",
+        "description": "${text}"
+      },
+      {
+        "prefix": "Extracted:",
+        "description": "valid JSON object with the extracted fields"
+      }
+    ]
+  },
+  "lm": null,
+  "metadata": {
+    "dependency_versions": {
+      "python": "3.12",
+      "dspy": "3.2.1",
+      "cloudpickle": "3.1"
+    }
+  }
+}

@@ -21,7 +21,7 @@ Prompt optimization on GPT-4o-mini gained +11.3 on the held-out set — over 4x 
 
 A second model family, Gemma 4 E4B (Apache-2.0, ~4.5B effective params), ran the identical loop: same 200 rows, same seed, same split, same metric, same teacher numbers reused (no GEPA re-run). It started far ahead of Qwen raw (79.17 vs 42.50 — Gemma 4's instruction-tuning already handles structured JSON output better zero-shot) and still gained from fine-tuning, beating every teacher prompt at 87.08 — though it landed 2.1 below the fine-tuned Qwen3.5-4B. Exact fine-tune score: 87.08.
 
-The GPT-5.4-mini rows are a control run: same pipeline, same data, same seed, only the student model swapped (baseline coincidentally matches GPT-4o-mini's 72.92 to the second decimal; the per-row logs differ, see `spike2_run_gpt54mini.log` artifacts in the source project). The fine-tuned adapters are published: [Qwen3.5-4B](https://huggingface.co/singhabhishekkk/apprentice-qwen35-4b-lora-receipts), [Gemma 4 E4B](https://huggingface.co/singhabhishekkk/apprentice-gemma4-e4b-lora-receipts).
+The GPT-5.4-mini rows are a control run: same pipeline, same data, same seed, only the student model swapped (baseline coincidentally matches GPT-4o-mini's 72.92 to the second decimal; the per-row logs differ). The GEPA-optimized GPT-5.4-mini prompt that scored 79.58 is in [`optimized_program_gpt54mini.json`](optimized_program_gpt54mini.json). The fine-tuned adapters are published: [Qwen3.5-4B](https://huggingface.co/singhabhishekkk/apprentice-qwen35-4b-lora-receipts), [Gemma 4 E4B](https://huggingface.co/singhabhishekkk/apprentice-gemma4-e4b-lora-receipts).
 
 ## Reproduce
 
@@ -32,6 +32,8 @@ python prepare_data.py
 export OPENAI_API_KEY=sk-...
 python ../../gepa_optimize.py --data golden.csv
 ```
+
+**The GPT-5.4-mini control run:** same commands, add `--model openai/gpt-5.4-mini`. The optimized prompt from our run is in `optimized_program_gpt54mini.json`.
 
 **The fine-tune (free, GPU Colab):** open `colab_finetune_qwen.ipynb` in [Google Colab](https://colab.research.google.com), set runtime to GPU, run all cells. Same 200 rows, same seed, same split, same metric.
 
