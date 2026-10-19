@@ -6,22 +6,26 @@ This is a deliberately harder, messier task than Task 1: real OCR noise, longer 
 
 ## Results
 
+Every score below is on the same 60 held-out rows. The table uses the printed two-decimal scores. Gemma 4 E4B stays at 79.17 raw and 87.08 fine-tuned, the scores already published for that run. One-decimal figures later in this file are those same scores, rounded.
+
 | Model | Score |
 |---|---|
-| GPT-4o-mini, plain prompt | 72.9 |
-| GPT-4o-mini, GEPA-optimized prompt | 84.2 |
-| GPT-5.4-mini, plain prompt | 72.9 |
-| GPT-5.4-mini, GEPA-optimized prompt | 79.6 |
-| Qwen3.5-4B, no fine-tune | 42.5 |
-| **Qwen3.5-4B, fine-tuned on 140 examples** | **89.2** |
-| Gemma 4 E4B, no fine-tune | 79.2 |
-| **Gemma 4 E4B, fine-tuned on 140 examples** | **87.1** |
+| GPT-4o-mini, plain prompt | 72.92 |
+| GPT-4o-mini, GEPA-optimized prompt | 84.17 |
+| GPT-5.4-mini, plain prompt (control) | 72.92 |
+| GPT-5.4-mini, GEPA-optimized prompt (control) | 79.58 |
+| Qwen3.5-4B, no fine-tune | 42.50 |
+| **Qwen3.5-4B, fine-tuned on 140 examples** | **89.17** |
+| Gemma 4 E4B, no fine-tune | 79.17 |
+| **Gemma 4 E4B, fine-tuned on 140 examples** | **87.08** |
+
+[runapprentice.com](https://runapprentice.com) shows the GPT-5.4-mini control pair (plain prompt 72.92, GEPA-optimized prompt 79.58). The GPT-4o-mini pair is a separate run on the same rows (plain prompt 72.92, GEPA-optimized prompt 84.17). The per-row run logs, including `spike2_run_gpt54mini.log`, are not committed in this repo.
 
 Prompt optimization on GPT-4o-mini gained +11.3 on the held-out set — over 4x the gain it produced on the easier Task 1. The fine-tuned Qwen3.5-4B beat both GEPA-optimized teachers: +5.0 over GPT-4o-mini (84.2) and +9.6 over the newer GPT-5.4-mini (79.6), starting from a raw score of 42.5. All runs measured on the same 60 held-out rows, GEPA runs on 2026-07-06 and the Colab fine-tunes the same day. Exact fine-tune score: 89.17.
 
 A second model family, Gemma 4 E4B (Apache-2.0, ~4.5B effective params), ran the identical loop: same 200 rows, same seed, same split, same metric, same teacher numbers reused (no GEPA re-run). It started far ahead of Qwen raw (79.17 vs 42.50 — Gemma 4's instruction-tuning already handles structured JSON output better zero-shot) and still gained from fine-tuning, beating every teacher prompt at 87.08 — though it landed 2.1 below the fine-tuned Qwen3.5-4B. Exact fine-tune score: 87.08.
 
-The GPT-5.4-mini rows are a control run: same pipeline, same data, same seed, only the student model swapped (baseline coincidentally matches GPT-4o-mini's 72.92 to the second decimal; the per-row logs differ, see `spike2_run_gpt54mini.log` artifacts in the source project). The fine-tuned adapters are published: [Qwen3.5-4B](https://huggingface.co/singhabhishekkk/apprentice-qwen35-4b-lora-receipts), [Gemma 4 E4B](https://huggingface.co/singhabhishekkk/apprentice-gemma4-e4b-lora-receipts).
+The GPT-5.4-mini rows are a control run: same pipeline, same data, same seed, only the student model swapped (the plain-prompt score matches GPT-4o-mini at 72.92). The fine-tuned adapters are published: [Qwen3.5-4B](https://huggingface.co/singhabhishekkk/apprentice-qwen35-4b-lora-receipts), [Gemma 4 E4B](https://huggingface.co/singhabhishekkk/apprentice-gemma4-e4b-lora-receipts).
 
 ## Reproduce
 

@@ -17,6 +17,40 @@ The loop is not tied to one model family: [receipt-extraction](tasks/receipt-ext
 
 Nor is it tied to one prompt-optimizer LLM: [contract-clause-extraction](tasks/contract-clause-extraction/) ran GEPA on both **GLM 5.2** via the OpenCode gateway and **gpt-5.4-mini** (`gepa_optimize.py --api-base` now supports any OpenAI-compatible gateway, plus `--num-threads`/`--max-errors` after GLM's gateway repeatedly dropped connections mid-eval — gpt-5.4-mini completed cleanly: 34.0 baseline, 36.3 optimized). Fine-tunes on the same split are next: Qwen3.5-4B, Gemma 4 E4B, and Gemma 4 E2B.
 
+## Scored runs
+
+Every scored run is in the table below. The use-case table above keeps one baseline and one GEPA column per task, and it rounds some scores to one decimal. This table lists each published score. Receipt rows use the printed two-decimal scores. Gemma 4 E4B on receipts stays at the scores already published for that run (79.17 raw, 87.08 fine-tuned).
+
+Held-out split, seed 42, scores from 0 to 100. JSON extraction, receipt extraction, and contract clause extraction use field-level F1. Document type classification uses exact-match accuracy. Scores are not comparable across tasks.
+
+| Task | Model | Run | Score |
+|---|---|---|---|
+| [JSON extraction](tasks/json-extraction/) | GPT-4o-mini | plain prompt | 83.1 |
+| [JSON extraction](tasks/json-extraction/) | GPT-4o-mini | GEPA-optimized prompt | 85.6 |
+| [JSON extraction](tasks/json-extraction/) | Qwen3.5-4B | no fine-tune | 69.1 |
+| [JSON extraction](tasks/json-extraction/) | Qwen3.5-4B | fine-tuned on 70 examples | 88.9 |
+| [Receipt extraction](tasks/receipt-extraction/) | GPT-4o-mini | plain prompt | 72.92 |
+| [Receipt extraction](tasks/receipt-extraction/) | GPT-4o-mini | GEPA-optimized prompt | 84.17 |
+| [Receipt extraction](tasks/receipt-extraction/) | GPT-5.4-mini | plain prompt (control) | 72.92 |
+| [Receipt extraction](tasks/receipt-extraction/) | GPT-5.4-mini | GEPA-optimized prompt (control) | 79.58 |
+| [Receipt extraction](tasks/receipt-extraction/) | Qwen3.5-4B | no fine-tune | 42.50 |
+| [Receipt extraction](tasks/receipt-extraction/) | Qwen3.5-4B | fine-tuned on 140 examples | 89.17 |
+| [Receipt extraction](tasks/receipt-extraction/) | Gemma 4 E4B | no fine-tune | 79.17 |
+| [Receipt extraction](tasks/receipt-extraction/) | Gemma 4 E4B | fine-tuned on 140 examples | 87.08 |
+| [Contract clause extraction](tasks/contract-clause-extraction/) | GLM 5.2 | plain prompt | 34.67 |
+| [Contract clause extraction](tasks/contract-clause-extraction/) | GPT-5.4-mini | plain prompt | 34.00 |
+| [Contract clause extraction](tasks/contract-clause-extraction/) | GPT-5.4-mini | GEPA-optimized prompt | 36.33 |
+| [Document type classification](tasks/document-type-classification/) | GPT-5.4-mini | plain paperless-gpt prompt | 78.33 |
+| [Document type classification](tasks/document-type-classification/) | GPT-5.4-mini | GEPA-optimized prompt | 81.67 |
+| [Document type classification](tasks/document-type-classification/) | Qwen3.5-4B | no fine-tune | 71.67 |
+| [Document type classification](tasks/document-type-classification/) | Qwen3.5-4B | fine-tuned on 140 examples | 80.00 |
+| [Document type classification](tasks/document-type-classification/) | Gemma 4 E4B | no fine-tune | 63.33 |
+| [Document type classification](tasks/document-type-classification/) | Gemma 4 E4B | fine-tuned on 140 examples | 86.67 |
+
+JSON extraction has no GPT-5.4-mini run. GLM 5.2 has no published GEPA score on contract clauses. Contract-clause fine-tunes are still pending. [Text-to-SQL](tasks/text-to-sql/) has no published score yet.
+
+[runapprentice.com](https://runapprentice.com) shows the receipt GPT-5.4-mini control pair: plain prompt 72.92, GEPA-optimized prompt 79.58.
+
 ## How it works
 
 Each use case is a self-contained folder under `tasks/` with a fixed contract:
