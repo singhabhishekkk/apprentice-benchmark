@@ -11,6 +11,14 @@ Small models learn a task from a golden dataset, then beat the bigger model that
 | [Contract clause extraction](tasks/contract-clause-extraction/) | Legal / compliance, long-document extraction | CUAD v1, real contracts + expert legal annotation | 200 (60 held out) | 34.0 (gpt-5.4-mini) | 36.3 | *pending* | *pending* (E4B + E2B) |
 | [Document type classification](tasks/document-type-classification/) | Document automation, noisy OCR classification | Corrected Tobacco3482 OCR text, real labels | 200 (60 held out) | 78.3 (gpt-5.4-mini) | 81.7 | **80.0** | **86.7** (E4B) |
 
+A sixth task, [intent classification with a bounded router](tasks/intent-classification/)
+(Banking77 and CLINC150, 2026-11-04), asks a second question: can the small model decide per
+request whether to answer or defer, with a proven ceiling on the error among kept answers? A
+logistic head on the fine-tune's own prefill state scores 90.2 on Banking77's full public test
+split (Claude Opus 5 84.4 and Jev 81.0 on the same rows, as run by OpenRouter) and 95.6 on
+CLINC150, keeps 70 to 92% of requests at a 5% bound on every seed, and answers in 63 ms on a
+Mac with no decoding. Exact-match accuracy; not comparable to the field-F1 tasks above.
+
 Four use cases now span structured JSON, receipt OCR, contract clauses and document types; the contract-clause fine-tunes are still pending. Fine-tuned Qwen3.5-4B beat the GEPA-optimized GPT-4o-mini prompt on JSON extraction (88.9 vs 85.6) and receipt extraction (89.2 vs 84.2), but not the GEPA-optimized gpt-5.4-mini prompt on document classification (80.0 vs 81.7 exact-match accuracy, one row out of 60). Fine-tuned Gemma 4 E4B scored 86.7 on classification. On receipt extraction, prompt optimization gained +11.3 field-level F1, and Qwen fine-tuning finished +5.0 above that optimized prompt, from a raw Qwen score of 42.5. The receipt control with gpt-5.4-mini scored 72.9 baseline / 79.6 GEPA-optimized, placing fine-tuned Qwen 9.6 points higher. Each task uses a held-out split with seed 42 and scores from 0 to 100. JSON and receipt extraction use field-level F1; document classification uses exact-match accuracy. Never compare scores across tasks.
 
 The loop is not tied to one model family: [receipt-extraction](tasks/receipt-extraction/) also fine-tunes `google/gemma-4-E4B-it` (Apache-2.0) via `colab_finetune_gemma.ipynb`, same split and metric as the Qwen run — 79.2 raw, 87.1 fine-tuned, beating every teacher prompt.

@@ -1,0 +1,12 @@
+ "conditions": "arm64 Mac, one request at a time, warm, no concurrency, 50 requests, adapter adapter, 4-bit",
+ "prompt_tokens_mean": 24.28,
+ "head_prefill_plus_matmul_ms": {
+  "p50": 63.1733339978382,
+  "p95": 106.97971044501172
+ },
+ "generate_ms": {
+  "p50": 400.0907079971512,
+  "p95": 457.7757559476595
+ },
+ "generated_tokens_mean": 8.06
+}

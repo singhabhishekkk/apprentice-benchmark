@@ -1,0 +1,12 @@
+[project]
+name = "apprentice-spike3"
+version = "0.1.0"
+description = "Routing spike: can the small model's own signals decide small-vs-frontier per request?"
+requires-python = ">=3.11"
+dependencies = [
+    "runapprentice[local] @ file:///Users/abhishek.singh/Downloads/self/Apprentice/.claude/worktrees/keen-darwin-a182e8/apprentice-sdk",
+    "huggingface-hub>=0.25",
+    "pyarrow>=15",
+    "numpy>=1.26",
+    "scikit-learn>=1.4",
+]
