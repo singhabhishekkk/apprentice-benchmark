@@ -19,8 +19,11 @@ ceiling on the error among the answers it keeps".
 | TRACER's classical surrogate (their split, OOS handling may differ) | not run | 92.4 | [arXiv 2604.14531](https://arxiv.org/abs/2604.14531) |
 
 Exact-match accuracy, 0 to 100. Format valid on every row of both test splits. Scores compare
-within a benchmark only. Full-fine-tuned encoders report low 90s on Banking77; this is not a
-state-of-the-art claim.
+within a benchmark only. Full-fine-tuned encoders report low to mid 90s on Banking77; this is
+not a state-of-the-art claim. The same head trained on all 10,003 Banking77 training rows
+(same adapter, which saw 1,540 of them) scores 93.1 on the same test rows
+(`results/banking77/E3_classifier_fulltrain.md`); the routing numbers below use the
+2,310-row head.
 
 ### Routing: share of requests the head keeps at a 5% error ceiling
 
