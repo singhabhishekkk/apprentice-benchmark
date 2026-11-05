@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="600" viewBox="0 0 1120 600" role="img" aria-label="Exact-match accuracy on the full public test splits of Banking77 and CLINC150: Apprentice's head on its fine-tune against published runs by others">
+  <rect width="1120" height="600" fill="#F5F2EA"/>
+  <g font-family="ui-sans-serif, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" fill="#1B1A16">
+    <text x="40" y="44" font-size="20" font-weight="600">Intent classification, exact-match accuracy on the full public test splits</text>
+    <text x="40" y="68" font-size="13" fill="#5C5A52">Every Apprentice number comes from a recorded run in this repo. Every other number is its publisher's own, dated. Scores compare within a benchmark only.</text>
+
+    <!-- Banking77 panel: 0 at x=430, 100 at x=930 (5 px per point) -->
+    <text x="40" y="112" font-size="15" font-weight="600">Banking77, 3,080 test rows, 77 intents</text>
+    <g font-size="13">
+      <text x="40" y="146">DeepOpen, encoder ensemble (their paper, Oct 2026)</text>
+      <rect x="430" y="134" width="470.5" height="14" fill="#C9C5B9"/>
+      <text x="908" y="146" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">94.1</text>
+
+      <text x="40" y="176">Banking77 paper, fine-tuned BERT-Large (2020)</text>
+      <rect x="430" y="164" width="468.3" height="14" fill="#C9C5B9"/>
+      <text x="906" y="176" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">93.7</text>
+
+      <text x="40" y="206" font-weight="600">Apprentice 4B head*, all training rows</text>
+      <rect x="430" y="194" width="468" height="14" fill="#7FB069"/>
+      <text x="906" y="206" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-weight="600">93.6</text>
+
+      <text x="40" y="236" font-weight="600">Apprentice 4B, generated answer, all rows</text>
+      <rect x="430" y="224" width="456" height="14" fill="#7FB069"/>
+      <text x="894" y="236" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-weight="600">91.2</text>
+
+      <text x="40" y="266" font-weight="600">Apprentice 4B head*, 20 rows per intent</text>
+      <rect x="430" y="254" width="451" height="14" fill="#7FB069"/>
+      <text x="889" y="266" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-weight="600">90.2</text>
+
+      <text x="40" y="296">Claude Opus 5, labels in the prompt (OpenRouter's run)</text>
+      <rect x="430" y="284" width="422" height="14" fill="#C9C5B9"/>
+      <text x="860" y="296" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">84.4</text>
+
+      <text x="40" y="326">OpenAI Decisions, 770-row sample (stacktoheap's run)</text>
+      <rect x="430" y="314" width="421" height="14" fill="#C9C5B9"/>
+      <text x="859" y="326" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">84.2</text>
+
+      <text x="40" y="356">Jev 1.13, Decisions API (OpenRouter's run)</text>
+      <rect x="430" y="344" width="405" height="14" fill="#C9C5B9"/>
+      <text x="843" y="356" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">81.0</text>
+    </g>
+    <line x1="430" y1="126" x2="430" y2="366" stroke="#9A978D" stroke-width="1"/>
+    <text x="430" y="384" font-size="11" fill="#5C5A52" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">0</text>
+    <text x="922" y="384" font-size="11" fill="#5C5A52" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">100</text>
+
+    <!-- CLINC150 panel -->
+    <text x="40" y="424" font-size="15" font-weight="600">CLINC150, 4,500 in-scope test rows, 150 intents</text>
+    <g font-size="13">
+      <text x="40" y="458">DeepOpen, encoder ensemble (their paper, Oct 2026)</text>
+      <rect x="430" y="446" width="490" height="14" fill="#C9C5B9"/>
+      <text x="928" y="458" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">98.0</text>
+
+      <text x="40" y="488" font-weight="600">Apprentice 4B head*</text>
+      <rect x="430" y="476" width="478" height="14" fill="#7FB069"/>
+      <text x="916" y="488" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-weight="600">95.6</text>
+
+      <text x="40" y="518" font-weight="600">Apprentice 4B, generated answer</text>
+      <rect x="430" y="506" width="466.5" height="14" fill="#7FB069"/>
+      <text x="904" y="518" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-weight="600">93.3</text>
+
+      <text x="40" y="548">TRACER, classical surrogate (their paper; their split)</text>
+      <rect x="430" y="536" width="462" height="14" fill="#C9C5B9"/>
+      <text x="900" y="548" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">92.4</text>
+    </g>
+    <line x1="430" y1="438" x2="430" y2="558" stroke="#9A978D" stroke-width="1"/>
+
+    <text x="40" y="572" font-size="11" fill="#5C5A52">Green bars are Apprentice's recorded runs, 2026-11-05. Grey bars are others' published numbers. Not a state-of-the-art claim: the encoder ensembles sit above the head on both splits.</text>
+    <text x="40" y="590" font-size="11" fill="#5C5A52">* The head reads the answer straight out of the small model's own thinking, in one step, without writing any text. That makes it faster than the model's written answer, and more accurate.</text>
+  </g>
+</svg>
