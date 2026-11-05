@@ -16,6 +16,7 @@ ceiling on the error among the answers it keeps".
 |---|---|---|---|
 | **Head on our fine-tune** (one matmul on the prefill state, no decoding) | **93.6** (all training rows); 90.2 (20 per intent) | **95.6** | this folder |
 | Our fine-tune's generated answer, Qwen3.5-4B 4-bit LoRA, two epochs | 91.2 (all training rows); 81.9 (20 per intent) | 93.3 | this folder |
+| **The same adapter and a refitted head served by llama.cpp on 4 CPU cores**, no GPU, 337 ms per decision | **93.6** (all training rows); generated answer 93.4 on the first 500 test rows | not run | `results/banking77_full/E15_llamacpp.md` |
 | Claude Opus 5, labels in the prompt, temperature 0, strict enum | 84.4 | not run | [OpenRouter, 2026](https://openrouter.ai/blog/insights/jev-vs-claude-opus-5-classification/) |
 | Jev 1.13, Decisions API choice question | 81.0 | not run | same OpenRouter post |
 | TRACER's classical surrogate (their split, OOS handling may differ) | not run | 92.4 | [arXiv 2604.14531](https://arxiv.org/abs/2604.14531) |
@@ -126,7 +127,10 @@ when running outside the Apprentice checkout.
 Adapters and heads on Hugging Face, Apache-2.0, Built with Qwen, each with its card:
 
 - [singhabhishekkk/apprentice-4b-banking77](https://huggingface.co/singhabhishekkk/apprentice-4b-banking77):
-  the all-rows adapter (generated answer 91.2) and its layer-32 head (93.6).
+  the all-rows adapter (generated answer 91.2) and its layer-32 head (93.6); also the
+  adapter as a llama.cpp LoRA GGUF (`adapter_llamacpp_f16.gguf`, 16 MB, applied at run
+  time) and a head refitted on that engine's states (`head_L32_llamacpp.npz`, 93.6 on the
+  same test split, 337 ms per decision on 4 CPU cores; `results/banking77_full/E15_llamacpp.md`).
 - [singhabhishekkk/apprentice-4b-clinc150](https://huggingface.co/singhabhishekkk/apprentice-4b-clinc150):
   the adapter (93.3) and its head (95.6).
 

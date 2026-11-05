@@ -1,0 +1,43 @@
+# One CPU pod serving the decision: the shape a customer's pipeline.yaml would give it
+# (requests and limits, probes on HTTP paths, one container, no GPU). Latency research only.
+# The 8-layer early-exit image is used here because the Docker VM on this Mac has 7.65 GB
+# shared with another cluster; the full image is the same container with 4Gi.
+#   kind create cluster --name apprentice-latency
+#   kind load docker-image apprentice-decision:qwen35-4b-q4-L8 --name apprentice-latency
+#   kubectl apply -f k8s/decision.yaml && kubectl port-forward svc/decision 8081:8080
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: decision
+spec:
+  replicas: 1
+  selector:
+    matchLabels: {app: decision}
+  template:
+    metadata:
+      labels: {app: decision}
+    spec:
+      containers:
+        - name: server
+          image: apprentice-decision:qwen35-4b-q4-L8
+          imagePullPolicy: Never
+          args: ["-t", "4", "-c", "512"]
+          ports: [{containerPort: 8080}]
+          resources:
+            requests: {cpu: "4", memory: 2Gi}
+            limits: {cpu: "4", memory: 3Gi}
+          readinessProbe:
+            httpGet: {path: /health, port: 8080}
+            periodSeconds: 5
+          livenessProbe:
+            httpGet: {path: /health, port: 8080}
+            initialDelaySeconds: 60
+            periodSeconds: 20
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: decision
+spec:
+  selector: {app: decision}
+  ports: [{port: 8080, targetPort: 8080}]

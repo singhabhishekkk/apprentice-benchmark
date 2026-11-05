@@ -1,0 +1,11 @@
+{
+  "rows": 100,
+  "logit_abs_diff_max": 2.285292975301445e-06,
+  "logit_rel_l2_max": 1.8666455291467824e-07,
+  "same_label": 100,
+  "confidence_abs_diff_max": 2.7749503206386805e-07,
+  "accuracy_served": 0.89,
+  "accuracy_python": 0.89,
+  "client_ms_p50": 306.27541650028434,
+  "client_ms_p95": 432.2820979112293
+}
